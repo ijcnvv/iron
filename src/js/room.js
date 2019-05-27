@@ -1,13 +1,22 @@
 "use strict";
 
 (() => {
-  const script = document.head.lastElementChild.textContent;
-  const regexp = /g_room\s*=\s*'(?<roomid>\d+)'/i;
-  const result = script.match(regexp);
 
-  if (!result) return false;
+  const roomid = (() => {
+    let id = 0;
 
-  const roomid = +result.groups.roomid;
+    document.querySelectorAll('script').forEach((el) => {
+      const script = el.textContent;
+      const regexp = /g_room\s*=\s*'(?<roomId>\d+)'/i;
+      const result = script.match(regexp);
+      if (result) id = +result.groups.roomId;
+    });
+
+    return id;
+  })();
+
+  if (roomid === 0) return false;
+
   const isFirstFloor = roomid >= 18612481 && roomid <= 18612529;
   const isSecondFloor = roomid >= 18612737 && roomid <= 18612991;
   const isThirdFloor = roomid >= 18612993 && roomid <= 18613072;
